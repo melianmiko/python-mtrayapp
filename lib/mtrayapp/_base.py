@@ -318,6 +318,7 @@ class TrayApplication(object):
 
         :return: a wrapped callback
         """
+
         @functools.wraps(callback)
         def inner(*args, **kwargs):
             try:
@@ -388,6 +389,7 @@ class TrayApplication(object):
 
         :param callable setup: The thread handler.
         """
+
         def setup_handler():
             self.__queue.get()
             if setup:
@@ -432,6 +434,7 @@ class MenuItem(object):
     menu items with this value set to ``False`` will be discarded when a
     :class:`Menu` is constructed.
     """
+
     def __init__(
             self, text, action, checked=None, radio=False, default=False,
             visible=True, enabled=True):
@@ -542,12 +545,14 @@ class MenuItem(object):
                 @functools.wraps(action)
                 def wrapper0(*args):
                     return action()
+
                 return wrapper0
 
             elif argcount == 1:
                 @functools.wraps(action)
                 def wrapper1(icon, *args):
                     return action(icon)
+
                 return wrapper1
 
             elif argcount == 2:
@@ -598,24 +603,25 @@ class Menu(object):
     First, non-visible menu items are removed from the list, then any instances
     of :attr:`SEPARATOR` occurring at the head or tail of the item list are
     removed, and any consecutive separators are reduced to one.
+
+    (by melianmiko): Added some features for Object-orientated programming.
+    From now, you can override this class and replace method on_build, for
+    dynamic menu generation.
     """
     #: A representation of a simple separator
     SEPARATOR = MenuItem('- - - -', None)
 
     def __init__(self, *items):
-        self._items = tuple(items)
+        self._items = []
+        self._static_items = list(items)
 
     @property
     def items(self):
         """All menu items.
         """
-        if (True
-                and len(self._items) == 1
-                and not isinstance(self._items[0], MenuItem)
-                and callable(self._items[0])):
-            return self._items[0]()
-        else:
-            return self._items
+        self._items = []
+        self.on_build()
+        return self._items
 
     @property
     def visible(self):
@@ -643,9 +649,48 @@ class Menu(object):
     def __str__(self):
         return '\n'.join(
             '\n'.join(
-                '    %s' % l
-                for l in str(i).splitlines())
+                '    %s' % line
+                for line in str(i).splitlines())
             for i in self)
+
+    def on_build(self):
+        # Override to generate menu dynamically
+        self._items = self._static_items
+
+    def add_item(self, text, action=None, checked=None, enabled=True, visible=True, default=False, args=()):
+        if not visible:
+            return
+
+        if not isinstance(text, str):
+            raise Exception("Must be string")
+
+        item = MenuItem(text,
+                        action=lambda: action(*args),
+                        checked=lambda _: checked,
+                        default=default,
+                        enabled=enabled)
+        self._items.append(item)
+
+    def include(self, menu, visible=True):
+        if not visible:
+            return
+
+        self._items += menu.items
+
+    def add_submenu(self, text, menu, visible=True):
+        if not visible:
+            return
+
+        item = MenuItem(text, Menu(*menu.build()))
+        self._items.append(item)
+
+    def add_separator(self):
+        self._items.append(self.SEPARATOR)
+
+    def wrap(self, text):
+        # Convert all added content to one submenu
+        menu = MenuItem(text, Menu(*self._items))
+        self._items = [menu]
 
     def _visible_items(self):
         """Returns all visible menu items.
@@ -655,6 +700,7 @@ class Menu(object):
 
         :return: a tuple containing all currently visible items
         """
+
         def cleaned(items):
             was_separator = False
             for i in items:

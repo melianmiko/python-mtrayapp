@@ -1,4 +1,4 @@
-from mtrayapp import TrayApplication
+from mtrayapp import TrayApplication, Menu, MenuItem
 
 from PIL import Image, ImageDraw
 
@@ -17,11 +17,32 @@ def create_image(width, height, color1, color2):
     return image
 
 
+class TestMenu(Menu):
+    def __init__(self, parent: TrayApplication):
+        super().__init__()
+        self.tray = parent
+
+    def on_build(self):
+        self.add_item("Disabled item", enabled=False)
+        self.add_item("Default item", default=True, action=self.say_hello)
+        self.add_separator()
+
+        self.add_item("Test: legacy menu creation", self.set_menu_legacy_way)
+
+    def go_back(self):
+        self.tray.menu = self
+
+    def say_hello(self):
+        print("Hello!")
+
+    def set_menu_legacy_way(self):
+        self.tray.menu = Menu(MenuItem("Go back", action=self.go_back))
+
+
 # In order for the icon to be displayed, you must provide an icon
-icon = TrayApplication(
-    'test name',
-    icon=create_image(64, 64, 'black', 'white'))
-
-
-# To finally show you icon, call run
-icon.run()
+if __name__ == "__main__":
+    tray = TrayApplication(
+        'test name',
+        icon=create_image(64, 64, 'black', 'white'))
+    tray.menu = TestMenu(tray)
+    tray.run()
