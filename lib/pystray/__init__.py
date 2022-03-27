@@ -24,18 +24,18 @@ def backend():
     """
     def dummy():
         from . import _dummy as backend; return backend
+
     def appindicator():
         from . import _appindicator as backend; return backend
+
     def darwin():
         from . import _darwin as backend; return backend
-    def gtk():
-        from . import _gtk as backend; return backend
+
     def win32():
         from . import _win32 as backend; return backend
-    def xorg():
-        from . import _xorg as backend; return backend
+
     backends = {b.__name__: b for b in (
-        dummy, appindicator, darwin, gtk, win32, xorg)}
+        dummy, appindicator, darwin, win32)}
 
     backend_name = os.environ.get('PYSTRAY_BACKEND', None)
     if backend_name:
@@ -48,7 +48,7 @@ def backend():
     elif sys.platform == 'win32':
         candidates = [win32]
     else:
-        candidates = [appindicator, gtk, xorg]
+        candidates = [appindicator]
 
     errors = []
     for candidate in candidates:

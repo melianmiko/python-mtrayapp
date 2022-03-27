@@ -51,7 +51,6 @@ INFO['author'] = INFO['__author__']
 INFO['version'] = '.'.join(str(v) for v in INFO['__version__'])
 
 
-
 # Load the read me
 try:
     with open(os.path.join(
