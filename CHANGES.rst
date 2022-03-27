@@ -1,6 +1,14 @@
 Release Notes
 =============
 
+v1.0.0 (2022-03-27) - First fork release
+----------------------------------------
+* Added OOP features for Menu object
+* Added message, error, confirm dialgos
+* Removed xorg and gtk backends
+* Added ability to use file path as icon
+* (darwin backend was broken, for now)
+
 v0.19.3 (2022-03-18) - Various fixes
 ------------------------------------
 *  Do not crash when passed a ``None`` menu.

@@ -1,5 +1,5 @@
-python-mtrayapp (1.0-1) impish; urgency=low
+python-mtrayapp (1.0.1-4) impish; urgency=medium
 
-  * Initial release
+  * Fix: transfer application prop to submenus and includes
 
- -- MelianMiko <melianmiko@gmail.com> Sun, 27 Mar 2022 16:21:01 +0700
+ -- MelianMiko <melianmiko@gmail.com> Sun, 27 Mar 2022 16:42:23 +0700

@@ -700,12 +700,14 @@ class Menu(object):
         if not visible:
             return
 
+        menu.application = self.application
         self._items += menu.items
 
     def add_submenu(self, text, menu, visible=True):
         if not visible:
             return
 
+        menu.application = self.application
         item = MenuItem(text, menu)
         self._items.append(item)
 

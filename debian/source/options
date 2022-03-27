@@ -1,0 +1,5 @@
+tar-ignore = "venv"
+tar-ignore = ".eggs"
+tar-ignore = "dist"
+tar-ignore = "**/__pycache__"
+

@@ -2,31 +2,23 @@
 # coding: utf-8
 
 import os
+from pathlib import Path
+
 import setuptools
-import sys
 
-
-#: The name of the package on PyPi
 PYPI_PACKAGE_NAME = 'mtrayapp'
-
-#: The name of the main Python package
 MAIN_PACKAGE_NAME = 'mtrayapp'
-
-#: The package URL
 PACKAGE_URL = 'https://github.com/melianmiko/python-mtrayapp'
-
-#: The author email
+AUTHOR = u"Moses Palmér, melianmiko's mod"
 # AUTHOR_EMAIL = 'moses.palmer@gmail.com'
 AUTHOR_EMAIL = "melianmiko@yandex.ru"
+VERSION = "1.0.1"
 
 #: The runtime requirements
-RUNTIME_PACKAGES = [
+DEPENDENCIES = [
     'Pillow',
-    'six']
-
-#: Additional requirements used during setup
-SETUP_PACKAGES = RUNTIME_PACKAGES + [
-    'sphinx >=1.3.1']
+    'six'
+]
 
 #: Packages requires for different environments
 EXTRA_PACKAGES = {
@@ -35,66 +27,28 @@ EXTRA_PACKAGES = {
     ':sys_platform == "linux"': [
         'python-xlib >=0.17']}
 
-
-# Read globals from ._info without loading it
-INFO = {}
-with open(os.path.join(
-        os.path.dirname(__file__),
-        'lib',
-        MAIN_PACKAGE_NAME,
-        '_info.py'), 'rb') as f:
-    data = (
-        f.read().decode('utf-8') if sys.version_info.major >= 3
-        else f.read())
-    code = compile(data, '_info.py', 'exec')
-    exec(code, {}, INFO)
-INFO['author'] = INFO['__author__']
-INFO['version'] = '.'.join(str(v) for v in INFO['__version__'])
-
-
-# Load the read me
-try:
-    with open(os.path.join(os.path.dirname(__file__), 'README.md', 'r')) as f:
-        README = f.read()
-
-    with open(os.path.join(
-            os.path.dirname(__file__),
-            'docs',
-            'usage.rst'), 'rb') as f:
-        README += '\n\n' + f.read().decode('utf-8')
-except IOError:
-    README = ''
-
-
-# Load the release notes
-try:
-    with open(os.path.join(
-            os.path.dirname(__file__),
-            'CHANGES.rst'), 'rb') as f:
-        CHANGES = f.read().decode('utf-8')
-except IOError:
-    CHANGES = ''
-
+this_directory = Path(__file__).parent
+README = (this_directory / "README.md").read_text()
 
 setuptools.setup(
     name=PYPI_PACKAGE_NAME,
-    version=INFO['version'],
+    version=VERSION,
     description="Modification of Moses Palmér's pystray lib with some extra features",
-    long_description=README + '\n\n' + CHANGES,
 
-    install_requires=RUNTIME_PACKAGES,
-    setup_requires=RUNTIME_PACKAGES + SETUP_PACKAGES,
+    long_description=README,
+    long_description_content_type='text/markdown',
+
+    install_requires=DEPENDENCIES,
     extras_require=EXTRA_PACKAGES,
 
-    author=INFO['author'],
+    author=AUTHOR,
     author_email=AUTHOR_EMAIL,
 
     url=PACKAGE_URL,
 
     packages=setuptools.find_packages(
-        os.path.join(
-            os.path.dirname(__file__),
-            'lib')),
+        os.path.join(os.path.dirname(__file__), 'lib')
+    ),
     package_dir={'': 'lib'},
     zip_safe=True,
 
