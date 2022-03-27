@@ -10,6 +10,8 @@ This mod provides some extra features, like:
 
 For example of modifications, check `tools/test_menu.py`.
 
+Original source code: [moses-palmer/pystray](https://github.com/moses-palmer/pystray).
+
 ## pystray Package Documentation
 This library allows you to create a *system tray icon*.
 
