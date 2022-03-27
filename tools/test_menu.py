@@ -63,7 +63,8 @@ class TestMenu(Menu):
     def go_back(self):
         self.application.menu = self
 
-    def say_hello(self):
+    @staticmethod
+    def say_hello():
         print("Hello!")
 
     def set_menu_legacy_way(self):

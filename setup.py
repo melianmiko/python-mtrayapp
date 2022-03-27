@@ -7,16 +7,17 @@ import sys
 
 
 #: The name of the package on PyPi
-PYPI_PACKAGE_NAME = 'pystray'
+PYPI_PACKAGE_NAME = 'mtrayapp'
 
 #: The name of the main Python package
-MAIN_PACKAGE_NAME = 'pystray'
+MAIN_PACKAGE_NAME = 'mtrayapp'
 
 #: The package URL
-PACKAGE_URL = 'https://github.com/moses-palmer/pystray'
+PACKAGE_URL = 'https://github.com/melianmiko/python-mtrayapp'
 
 #: The author email
-AUTHOR_EMAIL = 'moses.palmer@gmail.com'
+# AUTHOR_EMAIL = 'moses.palmer@gmail.com'
+AUTHOR_EMAIL = "melianmiko@yandex.ru"
 
 #: The runtime requirements
 RUNTIME_PACKAGES = [
@@ -53,10 +54,8 @@ INFO['version'] = '.'.join(str(v) for v in INFO['__version__'])
 
 # Load the read me
 try:
-    with open(os.path.join(
-            os.path.dirname(__file__),
-            'README.rst', 'rb')) as f:
-        README = f.read().decode('utf-8')
+    with open(os.path.join(os.path.dirname(__file__), 'README.md', 'r')) as f:
+        README = f.read()
 
     with open(os.path.join(
             os.path.dirname(__file__),
@@ -80,7 +79,7 @@ except IOError:
 setuptools.setup(
     name=PYPI_PACKAGE_NAME,
     version=INFO['version'],
-    description='Provides systray integration',
+    description="Modification of Moses Palmér's pystray lib with some extra features",
     long_description=README + '\n\n' + CHANGES,
 
     install_requires=RUNTIME_PACKAGES,
