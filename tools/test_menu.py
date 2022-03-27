@@ -39,7 +39,7 @@ class TestMenu(Menu):
         self.application.message_box("I'm message", "Test", self.msg_callback)
 
     def error(self):
-        self.application.message_box("I'm error", "Test", self.msg_callback)
+        self.application.error_box("I'm error", "Test", self.msg_callback)
 
     def confirm(self):
         self.application.confirm_box("Do you like pancakes?", "Test", self.confirm_callback)

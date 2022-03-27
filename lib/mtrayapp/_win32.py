@@ -373,7 +373,7 @@ class TrayApplication(_base.TrayApplication):
             return
 
         icon = self.icon
-        if type(self.icon) == type(str):
+        if isinstance(icon, str):
             icon = Image.open(self.icon)
 
         with serialized_image(icon, 'ICO') as icon_path:
