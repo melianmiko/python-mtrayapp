@@ -22,6 +22,8 @@ import signal
 import tempfile
 
 import gi
+from PIL import Image
+
 gi.require_version('Gtk', '3.0')
 from gi.repository import GLib, Gtk
 
@@ -37,6 +39,7 @@ def mainloop(f):
 
     :param callable f: The function to execute. Its return value is discarded.
     """
+
     @functools.wraps(f)
     def inner(*args, **kwargs):
         def callback(*args, **kwargs):
@@ -58,6 +61,7 @@ class GtkIcon(_base.TrayApplication):
         super(GtkIcon, self).__init__(*args, **kwargs)
         self._loop = None
         self._icon_path = None
+        self._icon_removable = False
         self._notifier = None
 
     def _run(self):
@@ -156,7 +160,7 @@ class GtkIcon(_base.TrayApplication):
         """Removes the temporary file used for the icon.
         """
         try:
-            if self._icon_path:
+            if self._icon_path and self._icon_removable:
                 os.unlink(self._icon_path)
                 self._icon_path = None
         except:
@@ -171,7 +175,16 @@ class GtkIcon(_base.TrayApplication):
         If an icon is already set, call :meth:`_remove_fs_icon` first to ensure
         that the old file is removed.
         """
-        self._icon_path = tempfile.mktemp()
-        with open(self._icon_path, 'wb') as f:
-            self.icon.save(f, 'PNG')
-        self._icon_valid = True
+        if type(self.icon) == type(str):
+            self._icon_path = self.icon
+            self._icon_valid = True
+            self._icon_removable = False
+        elif isinstance(self.icon, Image.Image):
+            self._icon_path = tempfile.mktemp()
+            with open(self._icon_path, 'wb') as f:
+                self.icon.save(f, 'PNG')
+            self._icon_valid = True
+            self._icon_removable = True
+        else:
+            self._icon_valid = False
+            self._icon_removable = False

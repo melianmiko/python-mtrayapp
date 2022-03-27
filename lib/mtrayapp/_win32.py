@@ -19,6 +19,8 @@ import ctypes
 import threading
 
 from ctypes import wintypes
+
+from PIL import Image
 from six.moves import queue
 
 from ._util import serialized_image, win32
@@ -347,7 +349,11 @@ class TrayApplication(_base.TrayApplication):
         if self._icon_handle:
             return
 
-        with serialized_image(self.icon, 'ICO') as icon_path:
+        icon = self.icon
+        if type(self.icon) == type(str):
+            icon = Image.open(self.icon)
+
+        with serialized_image(icon, 'ICO') as icon_path:
             self._icon_handle = win32.LoadImage(
                 None,
                 icon_path,
