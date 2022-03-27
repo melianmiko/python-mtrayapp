@@ -14,8 +14,8 @@ sys.path.insert(
 
 os.environ['PYSTRAY_BACKEND'] = 'dummy'
 
-import pystray as package
-import pystray._info as INFO
+import mtrayapp as package
+import mtrayapp._info as INFO
 
 
 # Add any Sphinx extension module names here, as strings. They can be
