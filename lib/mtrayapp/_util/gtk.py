@@ -175,8 +175,8 @@ class GtkIcon(_base.TrayApplication):
         If an icon is already set, call :meth:`_remove_fs_icon` first to ensure
         that the old file is removed.
         """
-        if type(self.icon) == type(str):
-            self._icon_path = self.icon
+        if isinstance(self.icon, str):
+            self._icon_path = os.path.realpath(self.icon)
             self._icon_valid = True
             self._icon_removable = False
         elif isinstance(self.icon, Image.Image):

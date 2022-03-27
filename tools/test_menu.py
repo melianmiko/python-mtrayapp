@@ -28,6 +28,14 @@ class TestMenu(Menu):
         self.add_separator()
 
         self.add_item("Test: legacy menu creation", self.set_menu_legacy_way)
+        self.add_item("Test: set icon from PIL", self.set_icon_pil)
+        self.add_item("Test: set icon from file path", self.set_icon_file)
+
+    def set_icon_file(self):
+        self.tray.icon = "icon.png"
+
+    def set_icon_pil(self):
+        self.tray.icon = create_image(64, 64, "red", "blue")
 
     def go_back(self):
         self.tray.menu = self
