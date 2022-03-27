@@ -25,24 +25,26 @@ from ._util import serialized_image, win32
 from . import _base
 
 
-class Icon(_base.Icon):
+# noinspection PyBroadException,PyMethodMayBeStatic
+class TrayApplication(_base.TrayApplication):
     _HWND_TO_ICON = {}
 
     def __init__(self, *args, **kwargs):
-        super(Icon, self).__init__(*args, **kwargs)
+        super(TrayApplication, self).__init__(*args, **kwargs)
 
         self._atom = self._register_class()
         self._icon_handle = None
         self._hwnd = None
         self._menu_hwnd = None
         self._hmenu = None
+        self._menu_handle = None
 
         # This is a mapping from win32 event codes to handlers used by the
         # mainloop
         self._message_handlers = {
             win32.WM_STOP: self._on_stop,
             win32.WM_NOTIFY: self._on_notify,
-            win32.WM_TASKBARCREATED: self._on_taskbarcreated}
+            win32.WM_TASKBARCREATED: self._on_taskbar_created}
 
         self._queue = queue.Queue()
 
@@ -99,7 +101,7 @@ class Icon(_base.Icon):
         try:
             hmenu, callbacks = self._menu_handle
             win32.DestroyMenu(hmenu)
-        except:
+        except Exception:
             pass
 
         callbacks = []
@@ -152,7 +154,7 @@ class Icon(_base.Icon):
                     win32.TranslateMessage(lpmsg)
                     win32.DispatchMessage(lpmsg)
 
-        except:
+        except Exception:
             self._log.error(
                 'An error occurred in the main loop', exc_info=True)
 
@@ -160,7 +162,7 @@ class Icon(_base.Icon):
             try:
                 self._hide()
                 del self._HWND_TO_ICON[self._hwnd]
-            except:
+            except Exception:
                 # Ignore
                 pass
 
@@ -212,7 +214,7 @@ class Icon(_base.Icon):
             if index > 0:
                 descriptors[index - 1](self)
 
-    def _on_taskbarcreated(self, wparam, lparam):
+    def _on_taskbar_created(self, wparam, lparam):
         """Handles ``WM_TASKBARCREATED``.
 
         This message is broadcast when the notification area becomes available.
@@ -393,7 +395,7 @@ def _dispatcher(hwnd, uMsg, wParam, lParam):
         return 0
 
     try:
-        icon = Icon._HWND_TO_ICON[hwnd]
+        icon = TrayApplication._HWND_TO_ICON[hwnd]
     except KeyError:
         return win32.DefWindowProc(hwnd, uMsg, wParam, lParam)
 

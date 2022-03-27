@@ -23,7 +23,7 @@ import tempfile
 
 import gi
 gi.require_version('Gtk', '3.0')
-from gi.repository import GLib, GObject, Gtk
+from gi.repository import GLib, Gtk
 
 from pystray import _base
 
@@ -48,12 +48,12 @@ def mainloop(f):
                 return False
 
         # Execute the callback as an idle function
-        GObject.idle_add(callback, *args, **kwargs)
+        GLib.idle_add(callback, *args, **kwargs)
 
     return inner
 
 
-class GtkIcon(_base.Icon):
+class GtkIcon(_base.TrayApplication):
     def __init__(self, *args, **kwargs):
         super(GtkIcon, self).__init__(*args, **kwargs)
         self._loop = None
@@ -113,13 +113,12 @@ class GtkIcon(_base.Icon):
         if not descriptors:
             return None
 
-        else:
-            menu = Gtk.Menu.new()
-            for descriptor in descriptors:
-                menu.append(self._create_menu_item(descriptor))
-            menu.show_all()
+        menu = Gtk.Menu.new()
+        for descriptor in descriptors:
+            menu.append(self._create_menu_item(descriptor))
+        menu.show_all()
 
-            return menu
+        return menu
 
     def _create_menu_item(self, descriptor):
         """Creates a :class:`Gtk.MenuItem` from a :class:`pystray.MenuItem`
@@ -143,9 +142,9 @@ class GtkIcon(_base.Icon):
                 menu_item.set_submenu(self._create_menu(descriptor.submenu))
             else:
                 menu_item.connect('activate', self._handler(descriptor))
-            if descriptor.default:
-                menu_item.get_children()[0].set_markup(
-                    '<b>%s</b>' % GLib.markup_escape_text(descriptor.text))
+            # if descriptor.default:
+            #     menu_item.get_children()[0].set_markup(
+            #         '<b>%s</b>' % GLib.markup_escape_text(descriptor.text))
             menu_item.set_sensitive(descriptor.enabled)
             return menu_item
 

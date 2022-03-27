@@ -61,7 +61,7 @@ def backend():
         '; '.join(str(e) for e in errors)))
 
 
-Icon = backend().Icon
+TrayApplication = backend().TrayApplication
 del backend
 
 from ._base import Menu, MenuItem

@@ -27,7 +27,7 @@ import  PyObjCTools.MachSignals
 from . import _base
 
 
-class Icon(_base.Icon):
+class TrayApplication(_base.TrayApplication):
     #: The selector for the button action
     _ACTION_SELECTOR = b'activate:sender'
 
@@ -44,7 +44,7 @@ class Icon(_base.Icon):
     HAS_NOTIFICATION = False
 
     def __init__(self, *args, **kwargs):
-        super(Icon, self).__init__(*args, **kwargs)
+        super(TrayApplication, self).__init__(*args, **kwargs)
 
         #: The NSImage version of the icon
         self._icon_image = None
@@ -249,11 +249,11 @@ class Icon(_base.Icon):
 
 
 class IconDelegate(Foundation.NSObject):
-    @objc.namedSelector(Icon._ACTION_SELECTOR)
+    @objc.namedSelector(TrayApplication._ACTION_SELECTOR)
     def activate_button(self, sender):
         self.icon()
 
-    @objc.namedSelector(Icon._MENU_ITEM_SELECTOR)
+    @objc.namedSelector(TrayApplication._MENU_ITEM_SELECTOR)
     def activate_menu_item(self, sender):
         nsmenu, callbacks = self.icon._menu_handle
         callbacks[sender.tag()](self.icon)

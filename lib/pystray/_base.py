@@ -24,7 +24,7 @@ import threading
 from six.moves import queue
 
 
-class Icon(object):
+class TrayApplication(object):
     """A representation of a system tray icon.
 
     The icon is initially hidden. Set :attr:`visible` to ``True`` to show it.

@@ -20,4 +20,4 @@ This module contains a dummy implementation.
 It cannot be used, but importing it will not raise any exceptions.
 """
 
-from ._base import Icon
+from ._base import TrayApplication

@@ -99,8 +99,6 @@ setuptools.setup(
     package_dir={'': 'lib'},
     zip_safe=True,
 
-    test_suite='tests',
-
     license='LGPLv3',
     keywords='system tray icon, systray icon',
     classifiers=[

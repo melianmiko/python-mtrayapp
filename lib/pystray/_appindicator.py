@@ -30,13 +30,13 @@ from ._util.gtk import GtkIcon, mainloop
 from . import _base
 
 
-class Icon(GtkIcon):
+class TrayApplication(GtkIcon):
     # We expand the menu on primary button click, and we do not even support
     # empty menus
     HAS_DEFAULT_ACTION = False
 
     def __init__(self, *args, **kwargs):
-        super(Icon, self).__init__(*args, **kwargs)
+        super(TrayApplication, self).__init__(*args, **kwargs)
 
         self._appindicator = None
 
@@ -51,7 +51,7 @@ class Icon(GtkIcon):
             AppIndicator.IndicatorCategory.APPLICATION_STATUS)
 
         self._appindicator.set_status(AppIndicator.IndicatorStatus.ACTIVE)
-        self._appindicator.set_icon(self._icon_path)
+        self._appindicator.set_icon_full(self._icon_path, self.title)
         self._appindicator.set_menu(
             self._menu_handle or self._create_default_menu())
 
@@ -64,7 +64,7 @@ class Icon(GtkIcon):
         self._remove_fs_icon()
         self._update_fs_icon()
         if self._appindicator:
-            self._appindicator.set_icon(self._icon_path)
+            self._appindicator.set_icon_full(self._icon_path, self.title)
 
     @mainloop
     def _update_title(self):
@@ -79,7 +79,7 @@ class Icon(GtkIcon):
             self._appindicator.set_menu(self._menu_handle)
 
     def _finalize(self):
-        super(Icon, self)._finalize()
+        super(TrayApplication, self)._finalize()
         del self._appindicator
 
     def _create_default_menu(self):
