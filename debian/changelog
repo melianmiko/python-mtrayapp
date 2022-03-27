@@ -1,4 +1,4 @@
-python-mtrayapp (1.0.1-4) impish; urgency=medium
+python-mtrayapp (1.0.1-5) impish; urgency=medium
 
   * Fix: transfer application prop to submenus and includes
 

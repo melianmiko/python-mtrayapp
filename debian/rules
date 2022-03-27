@@ -1,6 +1,7 @@
 #! /usr/bin/make -f
 
-export PYBUILD_NAME = mtrayapp
+export PYBUILD_NAME=mtrayapp
+export PYBUILD_INSTALL_ARGS_python3=--install-lib /usr/lib/python3/dist-packages
 
 %:
 	dh $@ --with python3 --buildsystem=pybuild
