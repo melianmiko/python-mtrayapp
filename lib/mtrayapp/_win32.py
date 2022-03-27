@@ -93,6 +93,29 @@ class TrayApplication(_base.TrayApplication):
             szInfo=message,
             szInfoTitle=title or self.title or '')
 
+    def _message_box(self, message, title, callback=None):
+        def run_async():
+            ctypes.windll.user32.MessageBoxW(None, message, title, 0)
+            if callback:
+                callback()
+
+        threading.Thread(target=run_async).start()
+
+    def _error_box(self, message, title, callback=None):
+        def run_async():
+            ctypes.windll.user32.MessageBoxW(None, message, title, 16)
+            if callback:
+                callback()
+
+        threading.Thread(target=run_async).start()
+
+    def _confirm_box(self, message, title, callback=None):
+        def run_async():
+            result = ctypes.windll.user32.MessageBoxW(None, message, title, 4)
+            callback(result == 6)
+
+        threading.Thread(target=run_async).start()
+
     def _remove_notification(self):
         self._message(
             win32.NIM_MODIFY,

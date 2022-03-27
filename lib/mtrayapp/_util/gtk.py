@@ -98,6 +98,31 @@ class GtkIcon(_base.TrayApplication):
         self._notifier.notify(title or self.title, message, self._icon_path)
 
     @mainloop
+    def _message_box(self, message, title, callback=None):
+        msg_type = Gtk.MessageType.INFO
+
+        # noinspection PyArgumentList
+        msg = Gtk.MessageDialog(None, 0, msg_type, Gtk.ButtonsType.OK, title)
+        msg.format_secondary_text(message)
+        msg.run()
+        msg.destroy()
+
+        if callback is not None:
+            callback()
+
+    _error_box = _message_box
+
+    # noinspection PyArgumentList
+    @mainloop
+    def _confirm_box(self, message, title, callback=None):
+        msg = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.YES_NO, title)
+        msg.format_secondary_text(message)
+        result = msg.run()
+        msg.destroy()
+
+        callback(result == -8)
+
+    @mainloop
     def _remove_notification(self):
         self._notifier.hide()
 

@@ -76,6 +76,8 @@ class TrayApplication(object):
     #: notification.
     HAS_NOTIFICATION = True
 
+    HAS_MESSAGE_BOX = True
+
     #: The timeout, in secods, before giving up on waiting for the setup thread
     #: when stopping the icon.
     SETUP_THREAD_TIMEOUT = 5.0
@@ -94,6 +96,8 @@ class TrayApplication(object):
 
         self._running = False
         self.__queue = queue.Queue()
+
+        self._menu.application = self
 
         prefix = self.__class__.__module__.rsplit('.', 1)[-1][1:] + '_'
         self._options = {
@@ -160,6 +164,7 @@ class TrayApplication(object):
     @menu.setter
     def menu(self, value):
         self._menu = value
+        self._menu.application = self
         self.update_menu()
 
     @property
@@ -287,6 +292,15 @@ class TrayApplication(object):
 
         self._notify(message, title)
 
+    def message_box(self, message, title, callback=None):
+        self._message_box(message, title, callback)
+
+    def error_box(self, message, title, callback=None):
+        self._error_box(message, title, callback)
+
+    def confirm_box(self, message, title, callback):
+        self._confirm_box(message, title, callback)
+
     def remove_notification(self):
         """Remove a notification.
         """
@@ -412,6 +426,15 @@ class TrayApplication(object):
 
         This is a platform dependent implementation.
         """
+        raise NotImplementedError()
+
+    def _message_box(self, message, title, callback=None):
+        raise NotImplementedError()
+
+    def _error_box(self, message, title, callback=None):
+        raise NotImplementedError()
+
+    def _confirm_box(self, message, title, callback=None):
         raise NotImplementedError()
 
     def _remove_notification(self):
@@ -611,9 +634,11 @@ class Menu(object):
     #: A representation of a simple separator
     SEPARATOR = MenuItem('- - - -', None)
 
+    # noinspection PyTypeChecker
     def __init__(self, *items):
         self._items = []
         self._static_items = list(items)
+        self.application = None         # type: TrayApplication
 
     @property
     def items(self):
@@ -681,7 +706,7 @@ class Menu(object):
         if not visible:
             return
 
-        item = MenuItem(text, Menu(*menu.build()))
+        item = MenuItem(text, menu)
         self._items.append(item)
 
     def add_separator(self):
