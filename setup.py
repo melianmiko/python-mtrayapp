@@ -12,7 +12,7 @@ PACKAGE_URL = 'https://github.com/melianmiko/python-mtrayapp'
 AUTHOR = u"Moses Palmér, melianmiko's mod"
 # AUTHOR_EMAIL = 'moses.palmer@gmail.com'
 AUTHOR_EMAIL = "melianmiko@yandex.ru"
-VERSION = "1.0.1"
+VERSION = "1.0.2"
 
 #: The runtime requirements
 DEPENDENCIES = [

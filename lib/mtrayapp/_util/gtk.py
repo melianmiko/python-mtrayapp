@@ -85,10 +85,10 @@ class GtkIcon(_base.TrayApplication):
         """
         # Make sure that we do not inhibit ctrl+c; this is only possible from
         # the main thread
-        try:
-            signal.signal(signal.SIGINT, signal.SIG_DFL)
-        except ValueError:
-            pass
+        # try:
+        #     signal.signal(signal.SIGINT, signal.SIG_DFL)
+        # except ValueError:
+        #     pass
 
         self._notifier = notify_dbus.Notifier()
         self._mark_ready()
